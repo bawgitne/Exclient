@@ -1,0 +1,44 @@
+{
+    "manifest_version": 3,
+    "name": "FB Regis Cookie",
+    "version": "1.0.0",
+    "permissions": [
+        "storage",
+        "cookies"
+    ],
+    "host_permissions": [
+        "https://www.facebook.com/*",
+        "http://localhost:8080/*"
+    ],
+    "background": {
+        "service_worker": "service_worker.js"
+    },
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.facebook.com/*",
+                "http://localhost:8080/*"
+            ],
+            "js": [
+                "config.js",
+                "utils.js",
+                "storage-helper.js",
+                "facebook-extractor.js",
+                "storage-manager.js",
+                "data-processor.js",
+                "api-manager.js",
+                "device-manager.js",
+                "main-app.js",
+                "content_script_refactored.js",
+                "post-id-extractor.js",
+                "content-extractor.js",
+                "repost-handler.js",
+                "repost.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ]
+}
