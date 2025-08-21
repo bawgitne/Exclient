@@ -5,94 +5,70 @@ class ContentExtractor {
         this.TARGET_CLASS = "xdj266r x14z9mp x1lziwak xzsf02u x1a2a7pz";
     }
 
+    _extract(container, elements, logger = console.log) {
+        if (!container || !elements) return '';
+
+        const logFn = logger === false ? null : (typeof logger === 'function' ? logger : console.log);
+
+        const nodeList = typeof elements === 'string'
+            ? container.querySelectorAll(elements)
+            : elements;
+
+        if (!nodeList || nodeList.length === 0) {
+            if (logFn) {
+                logFn(`${this.LOG_TAG} No elements found with selector:`, elements);
+            }
+            return '';
+        }
+
+        const contents = Array.from(nodeList).map(el => {
+            const text = el.textContent?.trim();
+            return text || '';
+        }).filter(text => text.length > 0);
+
+        const result = contents.join(' ').trim();
+
+        if (logFn) {
+            if (result) {
+                logFn(`${this.LOG_TAG} Found content:`, result.substring(0, 100) + (result.length > 100 ? '...' : ''));
+            } else {
+                logFn(`${this.LOG_TAG} No content found`);
+            }
+        }
+
+        return result;
+    }
+
     // Lấy nội dung từ thẻ có class được chỉ định
-    extractContent(buttonElement) {
+    extractContent(buttonElement, logger) {
         if (!buttonElement) return '';
 
         const modalRoot = document.querySelector('.__my_modal_wrapper__');
         const container = modalRoot;
+        const selector = `.${this.TARGET_CLASS.split(' ').join('.')}`;
 
-        // Tìm tất cả thẻ có class này
-        const elements = container.querySelectorAll(`.${this.TARGET_CLASS.split(' ').join('.')}`);
-
-        if (elements.length > 0) {
-            // Lấy nội dung text từ tất cả thẻ tìm được
-            const contents = Array.from(elements).map(el => {
-                const text = el.textContent?.trim();
-                return text || '';
-            }).filter(text => text.length > 0);
-
-            const result = contents.join(' ').trim();
-
-            if (result) {
-                console.log(`${this.LOG_TAG} Found content:`, result.substring(0, 100) + (result.length > 100 ? '...' : ''));
-            } else {
-                console.log(`${this.LOG_TAG} No content found`);
-            }
-
-            return result;
-        }
-
-        console.log(`${this.LOG_TAG} No elements found with class:`, this.TARGET_CLASS);
-        return '';
+        return this._extract(container, selector, logger);
     }
 
     // Lấy nội dung từ class tùy chỉnh
-    extractContentByClass(buttonElement, customClass) {
+    extractContentByClass(buttonElement, customClass, logger) {
         if (!buttonElement || !customClass) return '';
 
         const modalRoot = document.querySelector('.__my_modal_wrapper__');
         const container = modalRoot || buttonElement.closest?.('[role="article"], [data-ft], [data-testid*="post"]') || document;
+        const selector = `.${customClass.split(' ').join('.')}`;
 
-        // Tìm tất cả thẻ có class này
-        const elements = container.querySelectorAll(`.${customClass.split(' ').join('.')}`);
-
-        if (elements.length > 0) {
-            // Lấy nội dung text từ tất cả thẻ tìm được
-            const contents = Array.from(elements).map(el => {
-                const text = el.textContent?.trim();
-                return text || '';
-            }).filter(text => text.length > 0);
-
-            const result = contents.join(' ').trim();
-
-            if (result) {
-                console.log(`${this.LOG_TAG} Found content with custom class:`, result.substring(0, 100) + (result.length > 100 ? '...' : ''));
-            }
-
-            return result;
-        }
-
-        return '';
+        return this._extract(container, selector, logger);
     }
 
     // Lấy nội dung từ selector tùy chỉnh
-    extractContentBySelector(buttonElement, selector) {
+    extractContentBySelector(buttonElement, selector, logger) {
         if (!buttonElement || !selector) return '';
 
         const modalRoot = document.querySelector('.__my_modal_wrapper__');
         const container = modalRoot || buttonElement.closest?.('[role="article"], [data-ft], [data-testid*="post"]') || document;
 
-        // Tìm tất cả thẻ theo selector
-        const elements = container.querySelectorAll(selector);
-
-        if (elements.length > 0) {
-            // Lấy nội dung text từ tất cả thẻ tìm được
-            const contents = Array.from(elements).map(el => {
-                const text = el.textContent?.trim();
-                return text || '';
-            }).filter(text => text.length > 0);
-
-            const result = contents.join(' ').trim();
-
-            if (result) {
-                console.log(`${this.LOG_TAG} Found content with selector:`, result.substring(0, 100) + (result.length > 100 ? '...' : ''));
-            }
-
-            return result;
-        }
-
-        return '';
+        return this._extract(container, selector, logger);
     }
 }
 
