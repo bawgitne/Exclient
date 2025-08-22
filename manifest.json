@@ -1,7 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "FB Regis Cookie",
+    "name": "FB Regis Cookie - Clean Architecture",
     "version": "1.0.0",
+    "description": "Facebook extension with Clean Architecture implementation",
     "permissions": [
         "storage",
         "cookies"
@@ -11,7 +12,7 @@
         "http://localhost:8080/*"
     ],
     "background": {
-        "service_worker": "service_worker.js"
+        "service_worker": "src/presentation/service-worker/ServiceWorker.js"
     },
     "action": {
         "default_popup": "popup.html"
@@ -23,22 +24,30 @@
                 "http://localhost:8080/*"
             ],
             "js": [
-                "config.js",
-                "utils.js",
-                "storage-helper.js",
-                "facebook-extractor.js",
-                "storage-manager.js",
-                "data-processor.js",
-                "api-manager.js",
-                "device-manager.js",
-                "main-app.js",
-                "content_script_refactored.js",
-                "post-id-extractor.js",
-                "content-extractor.js",
-                "repost-handler.js",
-                "repost.js"
+                "src/shared/config/AppConfig.js",
+                "src/shared/utils/Utils.js",
+                "src/infrastructure/services/DataProcessor.js",
+                "src/infrastructure/services/DeviceManager.js",
+                "src/infrastructure/services/StorageManager.js",
+                "src/infrastructure/services/FacebookDataExtractor.js",
+                "src/infrastructure/services/ContentExtractor.js",
+                "src/application/services/FacebookSyncApp.js",
+                "src/presentation/content-scripts/FacebookContentScript.js",
+                "src/presentation/content-scripts/FacebookRepostInjector.js",
+                "src/presentation/content-scripts/ContentScriptMain.js"
             ],
             "run_at": "document_idle"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "src/**/*"
+            ],
+            "matches": [
+                "https://www.facebook.com/*",
+                "http://localhost:8080/*"
+            ]
         }
     ]
 }
